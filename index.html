@@ -1,0 +1,3991 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ludo King Star</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: #030416;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 412px;
+            height: 100vh;
+            max-height: 960px;
+            background-color: #080718;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Top Bar Header */
+        .top-bar {
+            background-color: #090821;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #161533;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f72585, #7209b7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+            border: 2px solid #4cc9f0;
+            text-align: center;
+            line-height: 1.1;
+            overflow: hidden;
+            flex-shrink: 0;
+            padding: 0;
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .headset-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #00b4d8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #ffb703;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            background-color: #e63946;
+            color: #fff;
+            font-size: 9px;
+            padding: 1px 4px;
+            border-radius: 50%;
+            font-weight: 700;
+        }
+
+        .wallet-btn {
+            background-color: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* App Scroll Body Area */
+        .app-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+
+        .app-body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* --- 1. PLAY TAB STYLES --- */
+        .banner-container {
+            margin: 10px 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #3d148a;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            height: 140px;
+            width: auto;
+            background: #0b0c26;
+        }
+
+        .banner-track {
+            display: flex;
+            height: 140px;
+            width: 100%;
+            transition: transform 0.45s ease;
+            will-change: transform;
+        }
+
+        .banner-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-slide a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .banner-slide img {
+            width: 100%;
+            height: 140px;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+            border: 0;
+        }
+
+        .banner-dots {
+            position: absolute;
+            left: 0; right: 0;
+            bottom: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .banner-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: background 0.2s;
+        }
+
+        .banner-dot.active {
+            background: #fff;
+        }
+
+        .notice-container {
+            background-color: #0b0c26;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #161845;
+            border-bottom: 1px solid #161845;
+            overflow: hidden;
+        }
+
+        .notice-tag {
+            color: #ffb703;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .notice-marquee {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            min-width: 0;
+        }
+
+        .notice-track {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: noticeScroll 18s linear infinite;
+        }
+
+        .notice-track:hover {
+            animation-play-state: paused;
+        }
+
+        .notice-text {
+            color: #ffb703;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            padding-right: 48px;
+        }
+
+        @keyframes noticeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .matches-section {
+            padding: 10px 12px;
+        }
+
+        .match-banner-card {
+            background: linear-gradient(180deg, #090e36, #030416);
+            border: 1px solid #1c2363;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .match-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .ludo-app-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            overflow: hidden;
+            border: 1px solid #ffb703;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+        }
+
+        .ludo-app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .match-titles h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .match-titles p {
+            font-size: 11px;
+            color: #8d99ae;
+        }
+
+        .match-illustration {
+            width: 90px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 7px;
+        }
+
+        .match-illustration img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 7px;
+        }
+
+        /* --- INNER LUDO MATCHES LIST SCREEN --- */
+        .page-header {
+            background-color: #090b26;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #1a1e4a;
+        }
+
+        .back-btn {
+            width: 34px;
+            height: 34px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .top-action-icon {
+            width: 34px;
+            height: 34px;
+            background-color: #192055;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .match-list-screen {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-details-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 12px;
+            color: #000000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header-inner {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-title-area h4 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #000000;
+            text-transform: uppercase;
+        }
+
+        .sub-notice {
+            color: #e63946;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            text-align: center;
+            margin: 12px 0;
+            gap: 10px;
+        }
+
+        .stat-item-card .label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .stat-item-card .val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #000000;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #2563eb;
+        }
+
+        .card-footer-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .slot-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .btn-join-blue {
+            background-color: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .card-actions-dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-how-to {
+            background-color: #0084ff;
+            color: #fff;
+            border: none;
+            padding: 9px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-room-id {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 9px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* --- 2. ME / PROFILE TAB STYLES --- */
+        .me-screen-view {
+            padding: 16px;
+        }
+
+        .user-profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 2px solid #ffe600;
+        }
+
+        .profile-avatar i {
+            font-size: 55px;
+            color: #4a5568;
+            margin-top: 10px;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffcc00;
+        }
+
+        .user-phone {
+            font-size: 13px;
+            color: #d1d5db;
+            margin-top: 2px;
+        }
+
+        .stats-card-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #000000;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-item:first-child {
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #000000;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #4a5568;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .menu-options-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 6px 0;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-icon {
+            width: 28px;
+            font-size: 18px;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .menu-icon.dev-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #e63946;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .menu-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        /* --- 2b. MY PROFILE SUB-SCREEN STYLES --- */
+        .profile-edit-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            margin: 14px;
+            padding: 16px;
+            color: #000000;
+        }
+
+        .profile-edit-avatar-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .profile-edit-avatar-row .profile-avatar {
+            width: 76px;
+            height: 76px;
+            margin-bottom: 8px;
+        }
+
+        .profile-edit-avatar-row .profile-avatar i {
+            font-size: 50px;
+            margin-top: 8px;
+        }
+
+        .change-photo-link {
+            font-size: 12px;
+            color: #0084ff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .field-group {
+            margin-bottom: 14px;
+        }
+
+        .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Hind Siliguri', sans-serif;
+            color: #111;
+            background: #fff;
+            outline: none;
+        }
+
+        .field-input:focus {
+            border-color: #0084ff;
+        }
+
+        .field-input:disabled {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .btn-save-profile {
+            width: 100%;
+            background-color: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        /* --- 2c. TOP PLAYERS SUB-SCREEN STYLES --- */
+        .leaderboard-wrap {
+            padding: 12px 14px;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            background-color: #101033;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 12px;
+        }
+
+        .leaderboard-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #8d99ae;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .leaderboard-tab.active {
+            background-color: #2563eb;
+            color: #fff;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .leaderboard-row.top-rank {
+            border: 1.5px solid #ffd700;
+        }
+
+        .rank-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .rank-badge.gold { background-color: #ffd700; color: #000; }
+        .rank-badge.silver { background-color: #c0c0c0; color: #000; }
+        .rank-badge.bronze { background-color: #cd7f32; color: #fff; }
+
+        .leaderboard-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-size: 16px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .leaderboard-row.me-row {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.08);
+        }
+
+        .leaderboard-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .leaderboard-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-sub {
+            font-size: 11px;
+            color: #6c757d;
+        }
+
+        .leaderboard-winnings {
+            font-size: 13px;
+            font-weight: 800;
+            color: #22c55e;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        /* --- 3. MY WALLET PAGE STYLES --- */
+        .wallet-card-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            margin: 16px;
+            padding: 16px;
+            color: #000000;
+        }
+
+        .wallet-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-row:last-child {
+            border-bottom: none;
+        }
+
+        .wallet-row-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+
+        .wallet-amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: #000000;
+            margin-top: 4px;
+        }
+
+        .btn-withdraw {
+            background-color: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-add-money {
+            background-color: #0084ff;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-transfer {
+            background-color: #8b5cf6;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .view-trans-link {
+            font-size: 12px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .txn-list {
+            padding: 12px;
+            padding-bottom: 90px;
+        }
+        .txn-item {
+            background: #0b0c26;
+            border: 1px solid #1c2363;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .txn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        .txn-icon.plus { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .txn-icon.minus { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .txn-icon.neutral { background: rgba(99,102,241,0.15); color: #818cf8; }
+        .txn-body { flex: 1; min-width: 0; }
+        .txn-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .txn-note {
+            font-size: 11px;
+            color: #8d99ae;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .txn-meta {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .txn-amount {
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .txn-amount.plus { color: #22c55e; }
+        .txn-amount.minus { color: #ef4444; }
+        .txn-empty {
+            text-align: center;
+            padding: 40px 16px;
+            color: #8d99ae;
+            font-size: 13px;
+        }
+
+        .video-guide-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .video-guide-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-guide-title i {
+            color: #e63946;
+            font-size: 16px;
+        }
+
+        .btn-watch-video {
+            background-color: #e63946;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-contact-us {
+            width: 100%;
+            background-color: #0084ff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- 4. ADD MONEY PAGE STYLES --- */
+        .add-money-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            margin: 16px;
+            padding: 18px 16px 22px;
+            color: #000000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .number-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .number-row:last-of-type {
+            border-bottom: none;
+            margin-bottom: 6px;
+        }
+
+        .number-row img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .number-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+            color: #111;
+            letter-spacing: 0.3px;
+        }
+
+        .copy-icon {
+            color: #64748b;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .copy-icon:active {
+            color: #0084ff;
+        }
+
+        .min-text {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .method-selector {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 22px 0 20px;
+        }
+
+        .method-btn {
+            width: 72px;
+            height: 72px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #f8fafc;
+            transition: all 0.15s ease;
+        }
+
+        .method-btn.selected {
+            border-color: #e91e63;
+            background: #fff;
+            box-shadow: 0 0 0 1px #e91e63;
+        }
+
+        .method-btn img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .add-input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-family: 'Hind Siliguri', sans-serif;
+            outline: none;
+            color: #111;
+            background: #fff;
+        }
+
+        .add-input:focus {
+            border-color: #0084ff;
+        }
+
+        .add-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .verify-btn {
+            width: 100%;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .verify-btn:active {
+            opacity: 0.85;
+        }
+
+        .verify-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .add-instruction {
+            text-align: center;
+            font-size: 12.5px;
+            color: #64748b;
+            margin-top: 16px;
+            line-height: 1.45;
+            padding: 0 4px;
+        }
+
+        /* --- 5. WITHDRAW PAGE STYLES --- */
+        .withdraw-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            margin: 16px;
+            padding: 18px 16px 22px;
+            color: #000000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .withdraw-balance-box {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .withdraw-balance-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #059669;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .withdraw-balance-amount {
+            font-size: 26px;
+            font-weight: 800;
+            color: #047857;
+            margin-top: 4px;
+        }
+
+        .withdraw-section-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #334155;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            background: #22c55e;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .withdraw-btn:active {
+            opacity: 0.85;
+        }
+
+        .withdraw-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* --- 6. SUPPORT PAGE STYLES --- */
+        .support-wrap {
+            padding: 14px;
+        }
+
+        .support-hero {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 14px;
+            padding: 18px 16px;
+            margin-bottom: 14px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .support-hero i {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .support-hero h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .support-hero p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .support-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .support-option-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .support-option-icon.chat { background: #0ea5e9; }
+        .support-option-icon.faq { background: #8b5cf6; }
+        .support-option-icon.whatsapp { background: #22c55e; }
+        .support-option-icon.report { background: #f59e0b; }
+
+        .support-option-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .support-option-text p {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .support-message-box {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 6px;
+            color: #000;
+        }
+
+        .support-message-box textarea {
+            width: 100%;
+            min-height: 90px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-family: 'Hind Siliguri', sans-serif;
+            resize: none;
+            outline: none;
+            color: #111;
+        }
+
+        .support-message-box textarea:focus {
+            border-color: #0084ff;
+        }
+
+        .btn-send-support {
+            width: 100%;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 11px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* --- 7. NOTIFICATION PAGE STYLES --- */
+        .notif-wrap {
+            padding: 12px 14px;
+        }
+
+        .notif-item {
+            display: flex;
+            gap: 12px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .notif-item.unread {
+            border-left: 3px solid #2563eb;
+        }
+
+        .notif-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .notif-icon-box.money { background: #22c55e; }
+        .notif-icon-box.match { background: #2563eb; }
+        .notif-icon-box.system { background: #8b5cf6; }
+        .notif-icon-box.promo { background: #f59e0b; }
+
+        .notif-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .notif-body {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 3px;
+            line-height: 1.35;
+        }
+
+        .notif-time {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .notif-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8d99ae;
+        }
+
+        .notif-empty i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .notif-clear-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* --- 8. DEVELOPER PROFILE STYLES --- */
+        .dev-wrap {
+            padding: 14px;
+        }
+
+        .dev-hero {
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            border-radius: 16px;
+            padding: 22px 16px 20px;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+        }
+
+        .dev-hero-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 28px;
+        }
+
+        .dev-hero h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .dev-hero .tagline {
+            font-size: 12px;
+            opacity: 0.92;
+            font-weight: 500;
+        }
+
+        .dev-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            color: #000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        .dev-card-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dev-card-title span {
+            font-size: 16px;
+        }
+
+        .dev-about {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.55;
+        }
+
+        .dev-service-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dev-service-list li {
+            font-size: 13px;
+            color: #1e293b;
+            padding: 7px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .dev-service-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .dev-why-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .dev-why-list li {
+            font-size: 12px;
+            color: #1e293b;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 10px 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dev-price-box {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        .dev-price-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #059669;
+            text-transform: uppercase;
+        }
+
+        .dev-price-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #047857;
+            margin-top: 4px;
+        }
+
+        .dev-price-note {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .dev-contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: #0088cc;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 4px;
+        }
+
+        .dev-contact-btn:active {
+            opacity: 0.88;
+        }
+
+        .dev-contact-link {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            height: 62px;
+            background-color: #050617;
+            border-top: 1px solid #161845;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+            width: 33.33%;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Simple toast for placeholder actions */
+        .toast {
+            position: absolute;
+            left: 50%;
+            bottom: 78px;
+            transform: translateX(-50%) translateY(20px);
+            background-color: #151530;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #2c2c5c;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== AUTH SCREEN ===== */
+        .auth-screen {
+            position: absolute;
+            inset: 0;
+            background: #030416;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 20px;
+            overflow-y: auto;
+        }
+        .auth-screen.hidden { display: none !important; }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 360px;
+        }
+        .auth-logo .logo-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 12px;
+            font-size: 12px;
+            border-width: 2px;
+        }
+        .auth-logo h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .auth-logo p {
+            font-size: 12px;
+            color: #8d99ae;
+            margin-top: 4px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 360px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 18px;
+            color: #000;
+        }
+        .auth-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 18px;
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .auth-tab.active {
+            background: #2563eb;
+            color: #fff;
+        }
+        .auth-field {
+            margin-bottom: 12px;
+        }
+        .auth-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .auth-field input {
+            width: 100%;
+            padding: 12px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Hind Siliguri', sans-serif;
+            color: #111;
+            outline: none;
+            background: #fff;
+        }
+        .auth-field input:focus { border-color: #2563eb; }
+        .auth-submit {
+            width: 100%;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .auth-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .auth-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .auth-error.show { display: block; }
+        .auth-loading {
+            position: absolute;
+            inset: 0;
+            background: rgba(3,4,22,0.85);
+            z-index: 250;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .auth-loading.show { display: flex; }
+        .auth-spinner {
+            width: 36px; height: 36px;
+            border: 3px solid #334155;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH / LOGIN SCREEN -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-logo">
+            <div class="logo-icon">
+                <img src="https://i.postimg.cc/ydRrgLk5/IMG-20260802-174738-112.jpg" alt="Ludo King Star">
+            </div>
+            <h1>Ludo King Star</h1>
+            <p>লগইন করুন বা নতুন অ্যাকাউন্ট তৈরি করুন</p>
+        </div>
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">লগইন</div>
+                <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">রেজিস্টার</div>
+            </div>
+            <div class="auth-error" id="authError"></div>
+
+            <div id="loginForm">
+                <div class="auth-field">
+                    <label>মোবাইল নাম্বার</label>
+                    <input type="tel" id="loginPhone" placeholder="01XXXXXXXXX" maxlength="11">
+                </div>
+                <div class="auth-field">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
+                </div>
+                <button class="auth-submit" id="loginBtn" onclick="handleLogin()">লগইন করুন</button>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <div class="auth-field">
+                    <label>নাম</label>
+                    <input type="text" id="regName" placeholder="আপনার নাম">
+                </div>
+                <div class="auth-field">
+                    <label>মোবাইল নাম্বার</label>
+                    <input type="tel" id="regPhone" placeholder="01XXXXXXXXX" maxlength="11">
+                </div>
+                <div class="auth-field">
+                    <label>পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+                    <input type="password" id="regPassword" placeholder="পাসওয়ার্ড সেট করুন">
+                </div>
+                <div class="auth-field">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="পাসওয়ার্ড আবার দিন">
+                </div>
+                <div class="auth-field">
+                    <label>Referral Code (ঐচ্ছিক)</label>
+                    <input type="text" id="regReferralCode" placeholder="বন্ধুর রেফার কোড" style="text-transform:uppercase;">
+                </div>
+                <button class="auth-submit" id="registerBtn" onclick="handleRegister()">অ্যাকাউন্ট তৈরি করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-loading" id="authLoading">
+        <div class="auth-spinner"></div>
+        <div id="authLoadingText">লোড হচ্ছে...</div>
+    </div>
+
+    <div class="app-container hidden" id="appContainer">
+        
+        <div class="top-bar">
+            <div id="defaultHeader" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="brand-logo">
+                    <div class="logo-icon">
+                        <img src="https://i.postimg.cc/ydRrgLk5/IMG-20260802-174738-112.jpg" alt="Ludo King Star">
+                    </div>
+                    <div class="brand-name">Ludo King Star</div>
+                </div>
+                <div class="header-actions">
+                    <div class="headset-icon" onclick="openSupportScreen()"><i class="fa-solid fa-headset"></i></div>
+                    <div class="notification-icon" onclick="openNotificationScreen()">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-badge" id="notifBadge">2</span>
+                    </div>
+                    <div class="wallet-btn" onclick="openWalletScreen()">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span id="headerBalance">170.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="walletHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeWalletScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Ludo King Star</div>
+                </div>
+                <div class="wallet-btn">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span id="headerBalance2">170.00</span>
+                </div>
+            </div>
+
+            <div id="transactionsHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeTransactionsScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Transactions</div>
+                </div>
+            </div>
+
+            <!-- ADD MONEY HEADER -->
+            <div id="addMoneyHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeAddMoneyScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Add Money</div>
+                </div>
+            </div>
+
+            <!-- WITHDRAW HEADER -->
+            <div id="withdrawHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeWithdrawScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Withdraw</div>
+                </div>
+            </div>
+
+            <!-- SUPPORT HEADER -->
+            <div id="supportHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeSupportScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Support</div>
+                </div>
+            </div>
+
+            <!-- NOTIFICATION HEADER -->
+            <div id="notificationHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeNotificationScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Notifications</div>
+                </div>
+            </div>
+
+            <!-- DEVELOPER PROFILE HEADER -->
+            <div id="developerHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeDeveloperScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Developer Profile</div>
+                </div>
+            </div>
+            <div id="referHeader" class="hidden" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="back-btn" onclick="closeReferScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="brand-name">Refer & Earn</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-body">
+            
+            <div id="playTabView">
+                <div class="banner-container" id="homeBanner">
+                    <div class="banner-track" id="bannerTrack">
+                        <div class="banner-slide">
+                            <img src="https://i.postimg.cc/7YQmLG28/1777827822072-1.png" alt="Banner">
+                        </div>
+                    </div>
+                    <div class="banner-dots" id="bannerDots"></div>
+                </div>
+
+                <div class="notice-container">
+                    <span class="notice-tag">নোটিশঃ</span>
+                    <div class="notice-marquee">
+                        <div class="notice-track" id="noticeTrack">
+                            <span class="notice-text" id="noticeText1">আসসালামালাইকুম কি অবস্থা সবার</span>
+                            <span class="notice-text" id="noticeText2">আসসালামালাইকুম কি অবস্থা সবার</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="matches-section">
+                    <div class="match-banner-card" onclick="openMatchListScreen()">
+                        <div class="match-info-left">
+                            <div class="ludo-app-icon">
+                                <img src="https://i.postimg.cc/7P96zTCS/Ludo-King.png" alt="Ludo King Icon">
+                            </div>
+                            <div class="match-titles">
+                                <h3>Ludo Matches</h3>
+                                <p id="matchCountText">3 Matches Found</p>
+                            </div>
+                        </div>
+
+                        <div class="match-illustration">
+                            <img src="https://i.postimg.cc/7P96zTCS/Ludo-King.png" alt="Ludo King Banner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="matchListSubView" class="hidden">
+                <div class="page-header">
+                    <div class="back-btn" onclick="closeMatchListScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="page-title">Ludo Matches</div>
+                    <div class="top-action-icon" onclick="showToast('স্ক্রিনশট আপলোড শীঘ্রই আসছে')"><i class="fa-solid fa-upload"></i></div>
+                </div>
+
+                <div class="match-list-screen">
+                    <div class="match-details-card">
+                        <div class="card-header-inner">
+                            <div class="card-icon">
+                                <img src="https://i.postimg.cc/7P96zTCS/Ludo-King.png" alt="Ludo King">
+                            </div>
+                            <div class="card-title-area">
+                                <h4>SPECIAL MATCH</h4>
+                                <div class="sub-notice">২ জন জয়েন হলেই রুম কোড দেওয়া হবে</div>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-item-card">
+                                <div class="label">Total Prize</div>
+                                <div class="val">৳1,000.00</div>
+                                <div class="label" style="margin-top:6px;">Version</div>
+                                <div class="val" style="font-size:14px;">Mobile</div>
+                            </div>
+                            <div class="stat-item-card">
+                                <div class="label">Entry Fee</div>
+                                <div class="val">৳550.00</div>
+                                <div class="label" style="margin-top:6px;">Board Type</div>
+                                <div class="val" style="font-size:14px;">0</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" id="matchProgressFill" style="width: 50%;"></div>
+                        </div>
+
+                        <div class="card-footer-flex">
+                            <span class="slot-count" id="matchSlotCount">1 / 2</span>
+                            <button class="btn-join-blue" onclick="joinMatch()">JOIN</button>
+                        </div>
+
+                        <div class="card-actions-dual">
+                            <button class="btn-how-to" onclick="showHowToPlay()">কিভাবে খেলবেন?</button>
+                            <button class="btn-room-id" onclick="showRoomId()">ROOM ID</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profileSubView" class="hidden">
+                <div class="page-header">
+                    <div class="back-btn" onclick="closeProfileScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="page-title">My Profile</div>
+                    <div style="width:34px;"></div>
+                </div>
+
+                <div class="profile-edit-card">
+                    <div class="profile-edit-avatar-row">
+                        <div class="profile-avatar">
+                            <img src="https://i.postimg.cc/W3Rxndqm/male-face-avatar-icon-set-flat-design-social-media-profiles-1281173-3806.jpg" alt="Profile">
+                        </div>
+                        <span class="change-photo-link" onclick="showToast('ছবি পরিবর্তন শীঘ্রই আসছে')">ছবি পরিবর্তন করুন</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">নাম</label>
+                        <input type="text" class="field-input" id="profileNameInput" value="developer Joy">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">মোবাইল নাম্বার</label>
+                        <input type="text" class="field-input" id="profilePhoneInput" value="01836497667" disabled>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">ইমেইল (ঐচ্ছিক)</label>
+                        <input type="email" class="field-input" id="profileEmailInput" placeholder="আপনার ইমেইল দিন">
+                    </div>
+
+                    <button class="btn-save-profile" onclick="saveProfile()">SAVE CHANGES</button>
+                </div>
+            </div>
+
+            <div id="topPlayersSubView" class="hidden">
+                <div class="page-header">
+                    <div class="back-btn" onclick="closeTopPlayersScreen()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="page-title">Top Players</div>
+                    <div style="width:34px;"></div>
+                </div>
+
+                <div class="leaderboard-wrap">
+                    <div class="leaderboard-tabs">
+                        <div class="leaderboard-tab active" onclick="switchLeaderboard(this, 'weekly')">Weekly</div>
+                        <div class="leaderboard-tab" onclick="switchLeaderboard(this, 'monthly')">Monthly</div>
+                        <div class="leaderboard-tab" onclick="switchLeaderboard(this, 'alltime')">All Time</div>
+                    </div>
+
+                    <div id="leaderboardList"></div>
+                </div>
+            </div>
+
+            <div id="meTabView" class="me-screen-view hidden">
+                <div class="user-profile-header">
+                    <div class="profile-avatar">
+                        <img src="https://i.postimg.cc/W3Rxndqm/male-face-avatar-icon-set-flat-design-social-media-profiles-1281173-3806.jpg" alt="Profile">
+                    </div>
+                    <div class="user-name">developer Joy</div>
+                    <div class="user-phone">01836497667</div>
+                </div>
+
+                <div class="stats-card-box">
+                    <div class="stat-item">
+                        <div class="stat-value" id="gamingBalanceVal">170.00</div>
+                        <div class="stat-label">Gaming Balance</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="winningBalanceVal">0.00</div>
+                        <div class="stat-label">Winning Balance</div>
+                    </div>
+                </div>
+
+                <div class="stats-card-box">
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Match Played</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0.00</div>
+                        <div class="stat-label">Total Winnings</div>
+                    </div>
+                </div>
+
+                <div class="menu-options-container">
+                    <div class="menu-item" onclick="openProfileScreen()">
+                        <div class="menu-icon"><i class="fa-regular fa-circle-user"></i></div>
+                        <div class="menu-text">My Profile</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="openWalletScreen()">
+                        <div class="menu-icon"><i class="fa-solid fa-wallet"></i></div>
+                        <div class="menu-text">My Wallet</div>
+                    </div>
+
+                    <div class="menu-item" onclick="openTopPlayersScreen()">
+                        <div class="menu-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                        <div class="menu-text">Top Players</div>
+                    </div>
+                    <div class="menu-item" onclick="showReferAndEarn()">
+                        <div class="menu-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                        <div class="menu-text">Refer And Earn</div>
+                    </div>
+                    <div class="menu-item" onclick="openSupportScreen()">
+                        <div class="menu-icon"><i class="fa-solid fa-headset"></i></div>
+                        <div class="menu-text">Admin Support</div>
+                    </div>
+                    <div class="menu-item" onclick="confirmLogout()">
+                        <div class="menu-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+                        <div class="menu-text">Logout</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="walletTabView" class="hidden">
+                <div class="wallet-card-container">
+                    
+                    <div class="wallet-row">
+                        <div>
+                            <div class="wallet-row-title">AVAILABLE BALANCE :</div>
+                            <div class="wallet-amount" id="availableBalanceVal">৳170.00</div>
+                        </div>
+                        <a href="#" class="view-trans-link" onclick="openTransactionsScreen(); return false;">View Transactions</a>
+                    </div>
+
+                    <div class="wallet-row">
+                        <div>
+                            <div class="wallet-row-title">🏆 WINNING BALANCE :</div>
+                            <div class="wallet-amount" id="winningBalanceVal2">৳0.00</div>
+                        </div>
+                        <button class="btn-withdraw" onclick="withdrawFunds()">WITHDRAW</button>
+                    </div>
+
+                    <div class="wallet-row">
+                        <div>
+                            <div class="wallet-row-title">💵 DEPOSIT BALANCE :</div>
+                            <div class="wallet-amount" id="depositBalanceVal">৳170.00</div>
+                        </div>
+                        <button class="btn-add-money" onclick="openAddMoneyScreen()">+ ADD MONEY</button>
+                    </div>
+
+                    <div class="wallet-row">
+                        <div class="wallet-row-title">🎮 WINNING TO GAMING BALANCE</div>
+                        <button class="btn-transfer" onclick="transferFunds()">TRANSFER</button>
+                    </div>
+
+                    <div class="video-guide-row" style="margin-top: 10px;">
+                        <div class="video-guide-title">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>HOW TO ADD MONEY?</span>
+                        </div>
+                        <button class="btn-watch-video" onclick="showToast('ভিডিও গাইড শীঘ্রই আসছে')">ভিডিও দেখুন</button>
+                    </div>
+
+                    <div class="video-guide-row">
+                        <div class="video-guide-title">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>HOW TO JOIN A MATCH?</span>
+                        </div>
+                        <button class="btn-watch-video" onclick="showToast('ভিডিও গাইড শীঘ্রই আসছে')">ভিডিও দেখুন</button>
+                    </div>
+
+                    <div class="video-guide-row">
+                        <div class="video-guide-title">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>HOW JOIN A LUDU MATCH?</span>
+                        </div>
+                        <button class="btn-watch-video" onclick="showToast('ভিডিও গাইড শীঘ্রই আসছে')">ভিডিও দেখুন</button>
+                    </div>
+
+                    <button class="btn-contact-us" onclick="openSupportScreen()">CONTACT US</button>
+
+                </div>
+            </div>
+
+            <!-- ==================== TRANSACTIONS SCREEN ==================== -->
+            <div id="transactionsView" class="hidden">
+                <div class="txn-list" id="transactionsList">
+                    <div class="txn-empty">লোড হচ্ছে...</div>
+                </div>
+            </div>
+
+            <!-- ==================== ADD MONEY SCREEN ==================== -->
+            <div id="addMoneyView" class="hidden">
+                <div class="add-money-card">
+
+                    <!-- Numbers list -->
+                    <div class="number-row">
+                        <img src="https://i.postimg.cc/fLdH1Q93/1656234782bkash-app-logo.png" alt="bKash">
+                        <span class="number-text">01836497667</span>
+                        <i class="fa-regular fa-copy copy-icon" onclick="copyNumber('01836497667')"></i>
+                        <span class="min-text">(Min 10 BDT)</span>
+                    </div>
+
+                    <div class="number-row">
+                        <img src="https://i.postimg.cc/PqYYjX27/1679248787Nagad-Logo.png" alt="Nagad">
+                        <span class="number-text">01836497667</span>
+                        <i class="fa-regular fa-copy copy-icon" onclick="copyNumber('01836497667')"></i>
+                        <span class="min-text">(Min 10 BDT)</span>
+                    </div>
+
+                    <div class="number-row">
+                        <img src="https://i.postimg.cc/8CckRtrB/dutch-bangla-rocket-logo-png-seeklogo-317692.png" alt="Rocket">
+                        <span class="number-text">01836497667</span>
+                        <i class="fa-regular fa-copy copy-icon" onclick="copyNumber('01836497667')"></i>
+                        <span class="min-text">(Min 10 BDT)</span>
+                    </div>
+
+                    <!-- Method selector -->
+                    <div class="method-selector">
+                        <div class="method-btn selected" onclick="selectMethod(this)">
+                            <img src="https://i.postimg.cc/fLdH1Q93/1656234782bkash-app-logo.png" alt="bKash">
+                        </div>
+                        <div class="method-btn" onclick="selectMethod(this)">
+                            <img src="https://i.postimg.cc/PqYYjX27/1679248787Nagad-Logo.png" alt="Nagad">
+                        </div>
+                        <div class="method-btn" onclick="selectMethod(this)">
+                            <img src="https://i.postimg.cc/8CckRtrB/dutch-bangla-rocket-logo-png-seeklogo-317692.png" alt="Rocket">
+                        </div>
+                    </div>
+
+                    <!-- Inputs -->
+                    <input type="text" class="add-input" placeholder="টানজেকশন আইডি দিন (TrxID)" id="trxIdInput">
+                    <input type="number" class="add-input" placeholder="Amount (BDT)" id="amountInput">
+
+                    <button class="verify-btn" id="verifyBtn" onclick="verifyPayment()">VERIFY</button>
+
+                    <p class="add-instruction">
+                        Verify করার আগে অবশ্যই উপরে দেওয়া নাম্বারে Send Money করতে হবে।
+                    </p>
+                </div>
+            </div>
+
+            <!-- ==================== WITHDRAW SCREEN ==================== -->
+            <div id="withdrawView" class="hidden">
+                <div class="withdraw-card">
+
+                    <div class="withdraw-balance-box">
+                        <div class="withdraw-balance-label">🏆 Winning Balance</div>
+                        <div class="withdraw-balance-amount" id="withdrawAvailableVal">৳0.00</div>
+                    </div>
+
+                    <div class="withdraw-section-title">পেমেন্ট মেথড সিলেক্ট করুন</div>
+                    <div class="method-selector" style="margin: 0 0 18px;">
+                        <div class="method-btn selected" onclick="selectWithdrawMethod(this, 'bKash')">
+                            <img src="https://i.postimg.cc/fLdH1Q93/1656234782bkash-app-logo.png" alt="bKash">
+                        </div>
+                        <div class="method-btn" onclick="selectWithdrawMethod(this, 'Nagad')">
+                            <img src="https://i.postimg.cc/PqYYjX27/1679248787Nagad-Logo.png" alt="Nagad">
+                        </div>
+                        <div class="method-btn" onclick="selectWithdrawMethod(this, 'Rocket')">
+                            <img src="https://i.postimg.cc/8CckRtrB/dutch-bangla-rocket-logo-png-seeklogo-317692.png" alt="Rocket">
+                        </div>
+                    </div>
+
+                    <input type="text" class="add-input" placeholder="আপনার অ্যাকাউন্ট নাম্বার" id="withdrawAccountInput">
+                    <input type="number" class="add-input" placeholder="Amount (BDT)" id="withdrawAmountInput">
+
+                    <button class="withdraw-btn" id="withdrawSubmitBtn" onclick="submitWithdraw()">WITHDRAW</button>
+
+                    <p class="add-instruction">
+                        উইথড্র রিকোয়েস্ট সাবমিট করার পর এডমিন অনুমোদন করলে টাকা আপনার সিলেক্ট করা নাম্বারে পাঠানো হবে। মিনিমাম উইথড্র ৫০ টাকা।
+                    </p>
+                </div>
+            </div>
+
+            <!-- ==================== SUPPORT SCREEN ==================== -->
+            <div id="supportView" class="hidden">
+                <div class="support-wrap">
+                    <div class="support-hero">
+                        <i class="fa-solid fa-headset"></i>
+                        <h3>সাপোর্ট সেন্টার</h3>
+                        <p>যেকোনো সমস্যায় আমরা আছি আপনার পাশে</p>
+                    </div>
+
+                    <div class="support-option" onclick="showToast('লাইভ চ্যাট শীঘ্রই চালু হবে')">
+                        <div class="support-option-icon chat"><i class="fa-solid fa-comments"></i></div>
+                        <div class="support-option-text">
+                            <h4>Live Chat</h4>
+                            <p>এডমিনের সাথে সরাসরি কথা বলুন</p>
+                        </div>
+                    </div>
+
+                    <div class="support-option" onclick="showSupportFAQ()">
+                        <div class="support-option-icon faq"><i class="fa-solid fa-circle-question"></i></div>
+                        <div class="support-option-text">
+                            <h4>সাধারণ প্রশ্ন (FAQ)</h4>
+                            <p>ডিপোজিট, উইথড্র ও ম্যাচ সম্পর্কে জানুন</p>
+                        </div>
+                    </div>
+
+                    <div class="support-option" onclick="showToast('WhatsApp: 01836497667')">
+                        <div class="support-option-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="support-option-text">
+                            <h4>WhatsApp Support</h4>
+                            <p>01836497667 নাম্বারে মেসেজ করুন</p>
+                        </div>
+                    </div>
+
+                    <div class="support-option" onclick="document.getElementById('supportMsgBox').scrollIntoView({behavior:'smooth'})">
+                        <div class="support-option-icon report"><i class="fa-solid fa-flag"></i></div>
+                        <div class="support-option-text">
+                            <h4>সমস্যা রিপোর্ট করুন</h4>
+                            <p>নিচে মেসেজ লিখে পাঠান</p>
+                        </div>
+                    </div>
+
+                    <div class="support-message-box" id="supportMsgBox">
+                        <textarea id="supportMessageInput" placeholder="আপনার সমস্যা বা প্রশ্ন লিখুন..."></textarea>
+                        <button class="btn-send-support" onclick="sendSupportMessage()">মেসেজ পাঠান</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== NOTIFICATION SCREEN ==================== -->
+            <div id="notificationView" class="hidden">
+                <div class="notif-wrap" id="notifListContainer">
+                    <!-- filled by JS -->
+                </div>
+            </div>
+
+            <!-- ==================== DEVELOPER PROFILE SCREEN ==================== -->
+            <div id="developerView" class="hidden">
+                <div class="dev-wrap">
+                    <div class="dev-hero">
+                        <div class="dev-hero-icon">🚀</div>
+                        <h2>DevZone BD</h2>
+                        <div class="tagline">Professional Android &amp; Web App Development</div>
+                    </div>
+
+                    <div class="dev-card">
+                        <div class="dev-card-title"><span>📱</span> আমাদের সম্পর্কে</div>
+                        <p class="dev-about">
+                            আপনার ব্যবসা বা প্রতিষ্ঠানের জন্য সম্পূর্ণ কাস্টম Android App এবং Web Application তৈরি করা হয়।
+                        </p>
+                    </div>
+
+                    <div class="dev-card">
+                        <div class="dev-card-title"><span>✨</span> আমাদের সেবাসমূহ</div>
+                        <ul class="dev-service-list">
+                            <li>✅ Tournament App Development</li>
+                            <li>✅ Tournament Website Development</li>
+                            <li>✅ Admin Panel</li>
+                            <li>✅ User Panel</li>
+                            <li>✅ Moderator Panel</li>
+                            <li>✅ Wallet System</li>
+                            <li>✅ Manual / Automatic Payment System</li>
+                            <li>✅ Firebase Integration</li>
+                            <li>✅ Push Notification</li>
+                            <li>✅ সম্পূর্ণ Custom UI/UX Design</li>
+                            <li>✅ Lifetime Source Code Ownership (যদি চুক্তিতে থাকে)</li>
+                        </ul>
+                    </div>
+
+                    <div class="dev-card">
+                        <div class="dev-card-title"><span>💼</span> কেন DevZone BD?</div>
+                        <ul class="dev-why-list">
+                            <li>✔ Fast Delivery</li>
+                            <li>✔ Clean Design</li>
+                            <li>✔ Secure Database</li>
+                            <li>✔ Responsive UI</li>
+                            <li>✔ After-Sales Support</li>
+                            <li>✔ Professional Work</li>
+                        </ul>
+                    </div>
+
+                    <div class="dev-card">
+                        <div class="dev-card-title"><span>💰</span> Starting From</div>
+                        <div class="dev-price-box">
+                            <div class="dev-price-label">মাত্র</div>
+                            <div class="dev-price-value">৳৫,০০০ থেকে*</div>
+                            <div class="dev-price-note">*(ফিচার অনুযায়ী মূল্য নির্ধারণ করা হবে)</div>
+                        </div>
+                    </div>
+
+                    <div class="dev-card">
+                        <div class="dev-card-title"><span>📩</span> যোগাযোগ</div>
+                        <a class="dev-contact-btn" href="https://t.me/devzonebd_724" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-telegram"></i>
+                            Telegram-এ যোগাযোগ করুন
+                        </a>
+                        <div class="dev-contact-link">t.me/devzonebd_724</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="referView" class="hidden" style="padding:16px 14px;padding-bottom:90px;">
+                <div style="background:linear-gradient(135deg,#1a0a4e,#0b0c26);border:1px solid #3d148a;border-radius:14px;padding:18px;text-align:center;margin-bottom:14px;">
+                    <div style="font-size:28px;margin-bottom:6px;">🎁</div>
+                    <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px;">Refer & Earn</div>
+                    <div style="font-size:12px;color:#a5b4fc;line-height:1.5;">বন্ধুকে ইনভাইট করুন। তারা রেজিস্টার করলে<br>আপনি পাবেন <b style="color:#ffe600;">৳10</b> বোনাস!</div>
+                </div>
+
+                <div style="background:#0b0c26;border:1px solid #1c2363;border-radius:12px;padding:14px;margin-bottom:12px;">
+                    <div style="font-size:11px;color:#8d99ae;margin-bottom:6px;">আপনার রেফার কোড</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div id="referCodeDisplay" style="flex:1;font-size:20px;font-weight:800;color:#ffe600;letter-spacing:1px;font-family:monospace;">—</div>
+                        <button onclick="copyReferCode()" style="background:#4c1d95;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer;">Copy</button>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                    <div style="background:#0b0c26;border:1px solid #1c2363;border-radius:12px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:#8d99ae;">রেফার করেছেন</div>
+                        <div id="referCountDisplay" style="font-size:22px;font-weight:800;color:#fff;margin-top:4px;">0</div>
+                    </div>
+                    <div style="background:#0b0c26;border:1px solid #1c2363;border-radius:12px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:#8d99ae;">রেফার আয়</div>
+                        <div id="referEarnDisplay" style="font-size:22px;font-weight:800;color:#22c55e;margin-top:4px;">৳0</div>
+                    </div>
+                </div>
+
+                <button onclick="shareReferCode()" style="width:100%;background:linear-gradient(90deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:14px;">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp-এ শেয়ার করুন
+                </button>
+
+                <div style="background:#0b0c26;border:1px solid #1c2363;border-radius:12px;padding:14px;">
+                    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;">নিয়মাবলী</div>
+                    <div style="font-size:12px;color:#a5b4fc;line-height:1.7;">
+                        • নতুন ইউজার রেজিস্ট্রেশনে আপনার কোড দিলে আপনি পাবেন ৳10<br>
+                        • নতুন ইউজার প্রথমবার ৳5–৳30 র‍্যান্ডম ওয়েলকাম বোনাস পাবে<br>
+                        • বোনাস Gaming Balance-এ যোগ হবে<br>
+                        • নিজের কোড নিজে ব্যবহার করা যাবে না
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="openSupportScreen()">
+                <i class="fa-solid fa-comments"></i>
+                <span>Chat</span>
+            </div>
+            <div class="nav-item active" id="playNavBtn" onclick="switchTab('play')">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Play</span>
+            </div>
+            <div class="nav-item" id="meNavBtn" onclick="switchTab('me')">
+                <i class="fa-solid fa-user"></i>
+                <span>Me</span>
+            </div>
+        </div>
+
+        <div class="toast" id="toastBox"></div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where, orderBy, onSnapshot, getDocs, serverTimestamp, increment, limit, arrayUnion } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpmOvo5nw-Uy4ZQb4rMjNvfZ8fshspBg4",
+            authDomain: "ludo-fb862.firebaseapp.com",
+            projectId: "ludo-fb862",
+            storageBucket: "ludo-fb862.firebasestorage.app",
+            messagingSenderId: "438684773049",
+            appId: "1:438684773049:web:015b92b8b267455ecb4968",
+            measurementId: "G-MEMQCP5HW9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const messaging = getMessaging(app);
+
+        // Phone used as login id → synthetic email for Firebase Auth
+        function phoneToEmail(phone) {
+            return phone.replace(/\D/g, '') + "@ludobd.app";
+        }
+
+        const appState = {
+            uid: null,
+            name: '',
+            phone: '',
+            email: '',
+            gamingBalance: 0,
+            winningBalance: 0,
+            depositBalance: 0,
+            matchesPlayed: 0,
+            totalWinnings: 0,
+            matchJoinedIds: {},
+            currentMatch: null,
+            unsubs: [],
+            referralCode: '',
+            referralCount: 0,
+            referralEarnings: 0,
+            welcomeBonusClaimed: false,
+            referredBy: null
+        };
+
+        /* ===================== FCM ===================== */
+        async function requestFCMPermissionAndSaveToken() {
+            if (!appState.uid) return;
+            if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+                console.log("এই ব্রাউজারে Push Notification সাপোর্ট নেই");
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+                console.log("Service Worker registered:", registration.scope);
+
+                const permission = await Notification.requestPermission();
+                if (permission !== "granted") {
+                    console.log("Notification permission denied by user");
+                    return;
+                }
+
+                const token = await getToken(messaging, {
+                    vapidKey: "BLCr9rmhGtjITH7YemgEPLTQNvWj-JAkcvEebcUwvFpc5YJZaXTUZn2jlOI4J3y0JWEXwuC-hNZmhe_g90XHNmI",
+                    serviceWorkerRegistration: registration
+                });
+
+                if (token) {
+                    console.log("FCM Token:", token);
+                    localStorage.setItem("fcmToken", token);
+
+                    await updateDoc(doc(db, "users", appState.uid), {
+                        fcmTokens: arrayUnion(token),
+                        lastFcmToken: token,
+                        fcmUpdatedAt: serverTimestamp()
+                    });
+                }
+            } catch (err) {
+                console.error("FCM setup error:", err);
+            }
+        }
+
+        // অ্যাপ খোলা অবস্থায় নোটিফিকেশন এলে (foreground)
+        onMessage(messaging, (payload) => {
+            console.log("Foreground FCM message:", payload);
+            const title = (payload.notification && payload.notification.title) || "নোটিফিকেশন";
+            const body  = (payload.notification && payload.notification.body) || "";
+            showToast(title + (body ? " — " + body : ""));
+        });
+        /* ===================== END FCM ===================== */
+
+        function makeReferralCode(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            const tail = (digits.slice(-6) || '000000').padStart(6, '0');
+            return 'LKS' + tail;
+        }
+
+        function randomWelcomeBonus() {
+            return Math.floor(Math.random() * 26) + 5; // 5..30
+        }
+
+        const REFERRER_BONUS = 10;
+
+        // DOM refs
+        const playTabView = document.getElementById('playTabView');
+        const matchListSubView = document.getElementById('matchListSubView');
+        const meTabView = document.getElementById('meTabView');
+        const walletTabView = document.getElementById('walletTabView');
+        const transactionsView = document.getElementById('transactionsView');
+        const addMoneyView = document.getElementById('addMoneyView');
+        const withdrawView = document.getElementById('withdrawView');
+        const supportView = document.getElementById('supportView');
+        const notificationView = document.getElementById('notificationView');
+        const developerView = document.getElementById('developerView');
+        const referView = document.getElementById('referView');
+        const profileSubView = document.getElementById('profileSubView');
+        const topPlayersSubView = document.getElementById('topPlayersSubView');
+        const defaultHeader = document.getElementById('defaultHeader');
+        const walletHeader = document.getElementById('walletHeader');
+        const transactionsHeader = document.getElementById('transactionsHeader');
+        const addMoneyHeader = document.getElementById('addMoneyHeader');
+        const withdrawHeader = document.getElementById('withdrawHeader');
+        const supportHeader = document.getElementById('supportHeader');
+        const notificationHeader = document.getElementById('notificationHeader');
+        const developerHeader = document.getElementById('developerHeader');
+        const referHeader = document.getElementById('referHeader');
+        const playNavBtn = document.getElementById('playNavBtn');
+        const meNavBtn = document.getElementById('meNavBtn');
+
+        let selectedWithdrawMethod = 'bKash';
+        let notifications = [];
+        let toastTimer = null;
+        let matchesCache = [];
+
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            box.textContent = msg;
+            box.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => box.classList.remove('show'), 2200);
+        }
+        window.showToast = showToast;
+
+        function setLoading(on, text) {
+            const el = document.getElementById('authLoading');
+            document.getElementById('authLoadingText').textContent = text || 'লোড হচ্ছে...';
+            el.classList.toggle('show', !!on);
+        }
+
+        function showAuthError(msg) {
+            const el = document.getElementById('authError');
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+        function clearAuthError() {
+            document.getElementById('authError').classList.remove('show');
+        }
+
+        function switchAuthTab(tab) {
+            clearAuthError();
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+        }
+        window.switchAuthTab = switchAuthTab;
+
+        async function handleRegister() {
+            clearAuthError();
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            const refCode = (document.getElementById('regReferralCode').value || '').trim().toUpperCase();
+
+            if (!name) return showAuthError('নাম দিন');
+            if (!/^01\d{9}$/.test(phone)) return showAuthError('সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (01XXXXXXXXX)');
+            if (password.length < 6) return showAuthError('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে');
+            if (!passwordConfirm) return showAuthError('Confirm Password দিন');
+            if (password !== passwordConfirm) return showAuthError('পাসওয়ার্ড ও Confirm Password মিলছে না');
+
+            const myCode = makeReferralCode(phone);
+            if (refCode && refCode === myCode) {
+                return showAuthError('নিজের রেফার কোড ব্যবহার করা যাবে না');
+            }
+
+            setLoading(true, 'অ্যাকাউন্ট তৈরি হচ্ছে...');
+            try {
+                // resolve referrer before creating account
+                let referrerId = null;
+                if (refCode) {
+                    const rq = query(collection(db, 'users'), where('referralCode', '==', refCode));
+                    const rs = await getDocs(rq);
+                    if (rs.empty) {
+                        setLoading(false);
+                        return showAuthError('রেফার কোড সঠিক নয়');
+                    }
+                    referrerId = rs.docs[0].id;
+                }
+
+                const welcome = randomWelcomeBonus();
+                const email = phoneToEmail(phone);
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(cred.user, { displayName: name });
+                await setDoc(doc(db, 'users', cred.user.uid), {
+                    name,
+                    phone,
+                    email: '',
+                    gamingBalance: welcome,
+                    winningBalance: 0,
+                    depositBalance: 0,
+                    matchesPlayed: 0,
+                    totalWinnings: 0,
+                    status: 'active',
+                    referralCode: myCode,
+                    referralCount: 0,
+                    referralEarnings: 0,
+                    welcomeBonusClaimed: true,
+                    welcomeBonusAmount: welcome,
+                    referredBy: referrerId || null,
+                    createdAt: serverTimestamp()
+                });
+
+                await addDoc(collection(db, 'transactions'), {
+                    userId: cred.user.uid,
+                    type: 'welcome_bonus',
+                    amount: welcome,
+                    note: 'প্রথম রেজিস্ট্রেশন ওয়েলকাম বোনাস',
+                    createdAt: serverTimestamp()
+                });
+                await addDoc(collection(db, 'notifications'), {
+                    userId: cred.user.uid,
+                    type: 'money',
+                    title: 'ওয়েলকাম বোনাস!',
+                    body: 'আপনার অ্যাকাউন্টে ৳' + welcome + ' ওয়েলকাম বোনাস যোগ হয়েছে।',
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+
+                if (referrerId) {
+                    try {
+                        await updateDoc(doc(db, 'users', referrerId), {
+                            gamingBalance: increment(REFERRER_BONUS),
+                            referralCount: increment(1),
+                            referralEarnings: increment(REFERRER_BONUS)
+                        });
+                        await addDoc(collection(db, 'transactions'), {
+                            userId: referrerId,
+                            type: 'referral_bonus',
+                            amount: REFERRER_BONUS,
+                            note: 'রেফার বোনাস — ' + name + ' (' + phone + ')',
+                            createdAt: serverTimestamp()
+                        });
+                        await addDoc(collection(db, 'notifications'), {
+                            userId: referrerId,
+                            type: 'money',
+                            title: 'রেফার বোনাস!',
+                            body: name + ' আপনার কোডে জয়েন করেছে। ৳' + REFERRER_BONUS + ' পেয়েছেন।',
+                            read: false,
+                            createdAt: serverTimestamp()
+                        });
+                    } catch (refErr) {
+                        console.warn('referrer bonus failed', refErr);
+                    }
+                }
+
+                showToast('অ্যাকাউন্ট তৈরি + ৳' + welcome + ' বোনাস!');
+            } catch (e) {
+                console.error(e);
+                if (e.code === 'auth/email-already-in-use') showAuthError('এই নাম্বারে ইতিমধ্যে অ্যাকাউন্ট আছে। লগইন করুন।');
+                else if (e.code === 'auth/weak-password') showAuthError('পাসওয়ার্ড আরও শক্তিশালী দিন');
+                else showAuthError(e.message || 'রেজিস্টার ব্যর্থ');
+            } finally {
+                setLoading(false);
+            }
+        }
+        window.handleRegister = handleRegister;
+
+        async function handleLogin() {
+            clearAuthError();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!/^01\d{9}$/.test(phone)) return showAuthError('সঠিক মোবাইল নাম্বার দিন');
+            if (!password) return showAuthError('পাসওয়ার্ড দিন');
+
+            setLoading(true, 'লগইন হচ্ছে...');
+            try {
+                await signInWithEmailAndPassword(auth, phoneToEmail(phone), password);
+            } catch (e) {
+                console.error(e);
+                if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') {
+                    showAuthError('নাম্বার বা পাসওয়ার্ড ভুল');
+                } else showAuthError(e.message || 'লগইন ব্যর্থ');
+            } finally {
+                setLoading(false);
+            }
+        }
+        window.handleLogin = handleLogin;
+
+        function clearUnsubs() {
+            appState.unsubs.forEach(u => { try { u(); } catch(_){} });
+            appState.unsubs = [];
+        }
+
+        async function loadUserProfile(uid) {
+            const snap = await getDoc(doc(db, 'users', uid));
+            if (!snap.exists()) {
+                // bootstrap profile if missing
+                const phone = (auth.currentUser.email || '').replace('@ludobd.app', '');
+                const welcome = randomWelcomeBonus();
+                const code = makeReferralCode(phone);
+                await setDoc(doc(db, 'users', uid), {
+                    name: auth.currentUser.displayName || 'Player',
+                    phone,
+                    email: '',
+                    gamingBalance: welcome,
+                    winningBalance: 0,
+                    depositBalance: 0,
+                    matchesPlayed: 0,
+                    totalWinnings: 0,
+                    status: 'active',
+                    referralCode: code,
+                    referralCount: 0,
+                    referralEarnings: 0,
+                    welcomeBonusClaimed: true,
+                    welcomeBonusAmount: welcome,
+                    createdAt: serverTimestamp()
+                });
+                try {
+                    await addDoc(collection(db, 'transactions'), {
+                        userId: uid,
+                        type: 'welcome_bonus',
+                        amount: welcome,
+                        note: 'প্রথম লগইন ওয়েলকাম বোনাস',
+                        createdAt: serverTimestamp()
+                    });
+                    await addDoc(collection(db, 'notifications'), {
+                        userId: uid,
+                        type: 'money',
+                        title: 'ওয়েলকাম বোনাস!',
+                        body: 'আপনার অ্যাকাউন্টে ৳' + welcome + ' ওয়েলকাম বোনাস যোগ হয়েছে।',
+                        read: false,
+                        createdAt: serverTimestamp()
+                    });
+                } catch (_) {}
+                showToast('ওয়েলকাম বোনাস ৳' + welcome + ' পেয়েছেন!');
+                return loadUserProfile(uid);
+            }
+            const d = snap.data();
+            if (d.status === 'banned') {
+                await signOut(auth);
+                showAuthError('আপনার অ্যাকাউন্ট ব্যান করা হয়েছে');
+                return false;
+            }
+            appState.uid = uid;
+            appState.name = d.name || 'Player';
+            appState.phone = d.phone || '';
+            appState.email = d.email || '';
+            appState.gamingBalance = Number(d.gamingBalance) || 0;
+            appState.winningBalance = Number(d.winningBalance) || 0;
+            appState.depositBalance = Number(d.depositBalance) || 0;
+            appState.matchesPlayed = Number(d.matchesPlayed) || 0;
+            appState.totalWinnings = Number(d.totalWinnings) || 0;
+            appState.referralCode = d.referralCode || makeReferralCode(appState.phone);
+            appState.referralCount = Number(d.referralCount) || 0;
+            appState.referralEarnings = Number(d.referralEarnings) || 0;
+            appState.welcomeBonusClaimed = !!d.welcomeBonusClaimed;
+            appState.referredBy = d.referredBy || null;
+
+            // ensure referralCode saved
+            if (!d.referralCode && appState.phone) {
+                try {
+                    await updateDoc(doc(db, 'users', uid), { referralCode: appState.referralCode });
+                } catch (_) {}
+            }
+
+            // first-time login welcome bonus for older accounts
+            if (!d.welcomeBonusClaimed) {
+                const welcome = randomWelcomeBonus();
+                try {
+                    await updateDoc(doc(db, 'users', uid), {
+                        gamingBalance: increment(welcome),
+                        welcomeBonusClaimed: true,
+                        welcomeBonusAmount: welcome
+                    });
+                    appState.gamingBalance += welcome;
+                    appState.welcomeBonusClaimed = true;
+                    await addDoc(collection(db, 'transactions'), {
+                        userId: uid,
+                        type: 'welcome_bonus',
+                        amount: welcome,
+                        note: 'প্রথম লগইন ওয়েলকাম বোনাস',
+                        createdAt: serverTimestamp()
+                    });
+                    await addDoc(collection(db, 'notifications'), {
+                        userId: uid,
+                        type: 'money',
+                        title: 'ওয়েলকাম বোনাস!',
+                        body: 'আপনার অ্যাকাউন্টে ৳' + welcome + ' ওয়েলকাম বোনাস যোগ হয়েছে।',
+                        read: false,
+                        createdAt: serverTimestamp()
+                    });
+                    showToast('ওয়েলকাম বোনাস ৳' + welcome + ' পেয়েছেন!');
+                } catch (e) {
+                    console.warn('welcome bonus', e);
+                }
+            }
+            return true;
+        }
+
+        function refreshBalances() {
+            const g = appState.gamingBalance.toFixed(2);
+            const w = appState.winningBalance.toFixed(2);
+            const d = appState.depositBalance.toFixed(2);
+            const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            set('headerBalance', g);
+            set('headerBalance2', g);
+            set('gamingBalanceVal', g);
+            set('winningBalanceVal', w);
+            set('winningBalanceVal2', '৳' + w);
+            set('availableBalanceVal', '৳' + g);
+            set('depositBalanceVal', '৳' + d);
+            set('withdrawAvailableVal', '৳' + w);
+
+            const nameEl = document.querySelector('.user-name');
+            const phoneEl = document.querySelector('.user-phone');
+            if (nameEl) nameEl.textContent = appState.name;
+            if (phoneEl) phoneEl.textContent = appState.phone;
+
+            const nameInput = document.getElementById('profileNameInput');
+            const phoneInput = document.getElementById('profilePhoneInput');
+            const emailInput = document.getElementById('profileEmailInput');
+            if (nameInput) nameInput.value = appState.name;
+            if (phoneInput) phoneInput.value = appState.phone;
+            if (emailInput) emailInput.value = appState.email || '';
+
+            // me tab match stats
+            const stats = document.querySelectorAll('#meTabView .stats-card-box')[1];
+            if (stats) {
+                const vals = stats.querySelectorAll('.stat-value');
+                if (vals[0]) vals[0].textContent = String(appState.matchesPlayed);
+                if (vals[1]) vals[1].textContent = appState.totalWinnings.toFixed(2);
+            }
+        }
+        window.refreshBalances = refreshBalances;
+
+        function listenUser(uid) {
+            const unsub = onSnapshot(doc(db, 'users', uid), (snap) => {
+                if (!snap.exists()) return;
+                const d = snap.data();
+                if (d.status === 'banned') {
+                    signOut(auth);
+                    return;
+                }
+                appState.name = d.name || appState.name;
+                appState.phone = d.phone || appState.phone;
+                appState.email = d.email || '';
+                appState.gamingBalance = Number(d.gamingBalance) || 0;
+                appState.winningBalance = Number(d.winningBalance) || 0;
+                appState.depositBalance = Number(d.depositBalance) || 0;
+                appState.matchesPlayed = Number(d.matchesPlayed) || 0;
+                appState.totalWinnings = Number(d.totalWinnings) || 0;
+                appState.referralCode = d.referralCode || appState.referralCode || makeReferralCode(appState.phone);
+                appState.referralCount = Number(d.referralCount) || 0;
+                appState.referralEarnings = Number(d.referralEarnings) || 0;
+                appState.welcomeBonusClaimed = !!d.welcomeBonusClaimed;
+                refreshBalances();
+                // live update refer screen if open
+                const codeEl = document.getElementById('referCodeDisplay');
+                if (codeEl && !document.getElementById('referView').classList.contains('hidden')) {
+                    updateReferScreenUI();
+                }
+            });
+            appState.unsubs.push(unsub);
+        }
+
+        let bannerIndex = 0;
+        let bannerTimer = null;
+        let bannerList = [];
+
+        function renderBanners(list) {
+            const track = document.getElementById('bannerTrack');
+            const dots = document.getElementById('bannerDots');
+            if (!track) return;
+
+            let items = (list || []).map(b => {
+                if (typeof b === 'string') return { url: b, link: '' };
+                return { url: (b && (b.url || b.image || b.src)) || '', link: (b && b.link) || '' };
+            }).filter(b => b.url);
+
+            if (!items.length) {
+                items = [{ url: 'https://i.postimg.cc/7YQmLG28/1777827822072-1.png', link: '' }];
+            }
+            bannerList = items;
+            bannerIndex = 0;
+
+            track.innerHTML = items.map((b, i) => {
+                const safeUrl = String(b.url).replace(/"/g, '&quot;');
+                const img = `<img src="${safeUrl}" alt="Banner ${i + 1}" loading="eager" referrerpolicy="no-referrer">`;
+                if (b.link) {
+                    const safeLink = String(b.link).replace(/"/g, '&quot;');
+                    return `<div class="banner-slide"><a href="${safeLink}" target="_blank" rel="noopener noreferrer">${img}</a></div>`;
+                }
+                return `<div class="banner-slide">${img}</div>`;
+            }).join('');
+
+            if (dots) {
+                dots.innerHTML = items.length > 1
+                    ? items.map((_, i) => `<div class="banner-dot${i === 0 ? ' active' : ''}"></div>`).join('')
+                    : '';
+            }
+
+            track.style.transform = 'translateX(0%)';
+            startBannerSlider();
+        }
+
+        function startBannerSlider() {
+            if (bannerTimer) clearInterval(bannerTimer);
+            bannerTimer = null;
+            if (bannerList.length <= 1) return;
+            bannerTimer = setInterval(() => {
+                bannerIndex = (bannerIndex + 1) % bannerList.length;
+                const track = document.getElementById('bannerTrack');
+                if (track) track.style.transform = 'translateX(-' + (bannerIndex * 100) + '%)';
+                document.querySelectorAll('#bannerDots .banner-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === bannerIndex);
+                });
+            }, 3500);
+        }
+
+        function setNoticeText(text) {
+            const t = (text || '').trim() || 'আসসালামালাইকুম কি অবস্থা সবার';
+            const t1 = document.getElementById('noticeText1');
+            const t2 = document.getElementById('noticeText2');
+            if (t1) t1.textContent = t;
+            if (t2) t2.textContent = t;
+            // restart animation so it keeps moving
+            const track = document.getElementById('noticeTrack');
+            if (track) {
+                track.style.animation = 'none';
+                void track.offsetWidth;
+                track.style.animation = '';
+            }
+        }
+
+        function listenNotice() {
+            const unsub = onSnapshot(doc(db, 'settings', 'app'), (snap) => {
+                if (!snap.exists()) return;
+                const d = snap.data();
+                if (d.notice != null) setNoticeText(d.notice);
+                // payment numbers on add money screen
+                if (d.bkash || d.nagad || d.rocket) {
+                    const rows = document.querySelectorAll('#addMoneyView .number-row .number-text');
+                    if (rows[0] && d.bkash) rows[0].textContent = d.bkash;
+                    if (rows[1] && d.nagad) rows[1].textContent = d.nagad;
+                    if (rows[2] && d.rocket) rows[2].textContent = d.rocket;
+                    window._payNumbers = {
+                        bKash: d.bkash || '01836497667',
+                        Nagad: d.nagad || '01836497667',
+                        Rocket: d.rocket || '01836497667'
+                    };
+                }
+                // home banners slider
+                if (Array.isArray(d.banners)) {
+                    renderBanners(d.banners);
+                }
+            }, () => {});
+            appState.unsubs.push(unsub);
+        }
+
+        function listenMatches() {
+            const q = query(collection(db, 'matches'), orderBy('createdAt', 'desc'));
+            const unsub = onSnapshot(q, (snap) => {
+                matchesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                const active = matchesCache.filter(m => m.status === 'active' || m.status === 'full');
+                const countEl = document.getElementById('matchCountText');
+                if (countEl) countEl.textContent = active.length + ' Matches Found';
+                renderMatchList();
+            }, (err) => {
+                console.warn('matches listen', err);
+                // fallback without orderBy if index missing
+            });
+            appState.unsubs.push(unsub);
+        }
+
+        function renderMatchList() {
+            const list = document.querySelector('.match-list-screen');
+            if (!list) return;
+            const active = matchesCache.filter(m => m.status === 'active' || m.status === 'full');
+            if (!active.length) {
+                list.innerHTML = '<div style="text-align:center;padding:30px;color:#8d99ae;">এখন কোনো ম্যাচ নেই</div>';
+                return;
+            }
+            list.innerHTML = active.map(m => {
+                const filled = Number(m.filled) || 0;
+                const slots = Number(m.slots) || 2;
+                const pct = Math.min(100, (filled / slots) * 100);
+                const joined = !!appState.matchJoinedIds[m.id];
+                return `
+                <div class="match-details-card" data-match-id="${m.id}">
+                    <div class="card-header-inner">
+                        <div class="card-icon">
+                            <img src="https://i.postimg.cc/7P96zTCS/Ludo-King.png" alt="Ludo King">
+                        </div>
+                        <div class="card-title-area">
+                            <h4>${m.title || 'MATCH'}</h4>
+                            <div class="sub-notice">${m.note || ''}</div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item-card">
+                            <div class="label">Total Prize</div>
+                            <div class="val">৳${Number(m.prize || 0).toLocaleString()}</div>
+                            <div class="label" style="margin-top:6px;">Version</div>
+                            <div class="val" style="font-size:14px;">Mobile</div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="label">Entry Fee</div>
+                            <div class="val">৳${Number(m.entry || 0).toFixed(2)}</div>
+                            <div class="label" style="margin-top:6px;">Board Type</div>
+                            <div class="val" style="font-size:14px;">0</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" style="width:${pct}%;"></div>
+                    </div>
+                    <div class="card-footer-flex">
+                        <span class="slot-count">${filled} / ${slots}</span>
+                        <button class="btn-join-blue" onclick="joinMatch('${m.id}')">${joined ? 'JOINED' : 'JOIN'}</button>
+                    </div>
+                    <div class="card-actions-dual">
+                        <button class="btn-how-to" onclick="showHowToPlay()">কিভাবে খেলবেন?</button>
+                        <button class="btn-room-id" onclick="showRoomId('${m.id}')">ROOM ID</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function listenNotifications() {
+            if (!appState.uid) return;
+            // only where (no orderBy) — index ছাড়াই কাজ করবে; সর্ট ক্লায়েন্টে
+            const q = query(collection(db, 'notifications'), where('userId', '==', appState.uid));
+            const unsub = onSnapshot(q, (snap) => {
+                const list = snap.docs.map(d => {
+                    const x = d.data();
+                    if (x.cleared) return null;
+                    return {
+                        id: d.id,
+                        type: x.type || 'system',
+                        title: x.title || 'নোটিশ',
+                        body: x.body || '',
+                        time: formatTime(x.createdAt),
+                        unread: x.read !== true,
+                        _ts: x.createdAt && x.createdAt.toMillis ? x.createdAt.toMillis() : 0
+                    };
+                }).filter(Boolean);
+                list.sort((a, b) => b._ts - a._ts);
+                notifications = list.slice(0, 50);
+                updateNotifBadge();
+                if (!document.getElementById('notificationView').classList.contains('hidden')) {
+                    renderNotifications();
+                }
+            }, (err) => {
+                console.warn('notifications listen error', err);
+            });
+            appState.unsubs.push(unsub);
+        }
+
+        function formatTime(ts) {
+            if (!ts || !ts.toDate) return 'এখন';
+            const diff = (Date.now() - ts.toDate().getTime()) / 1000;
+            if (diff < 60) return 'এখনই';
+            if (diff < 3600) return Math.floor(diff / 60) + ' মিনিট আগে';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' ঘণ্টা আগে';
+            return Math.floor(diff / 86400) + ' দিন আগে';
+        }
+
+        function enterApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            refreshBalances();
+            updateNotifBadge();
+            switchTab('play');
+
+            // FCM টোকেন চাও + Firestore এ সেভ করো
+            requestFCMPermissionAndSaveToken();
+        }
+
+        function exitApp() {
+            clearUnsubs();
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+            appState.uid = null;
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setLoading(true, 'প্রোফাইল লোড হচ্ছে...');
+                try {
+                    clearUnsubs();
+                    const ok = await loadUserProfile(user.uid);
+                    if (!ok) { setLoading(false); exitApp(); return; }
+                    listenUser(user.uid);
+                    listenNotice();
+                    listenMatches();
+                    listenNotifications();
+                    // load joined matches marker
+                    try {
+                        const jq = query(collection(db, 'matchPlayers'), where('userId', '==', user.uid));
+                        const js = await getDocs(jq);
+                        appState.matchJoinedIds = {};
+                        js.forEach(d => { appState.matchJoinedIds[d.data().matchId] = true; });
+                    } catch(_) {}
+                    enterApp();
+                } catch (e) {
+                    console.error(e);
+                    showAuthError('প্রোফাইল লোড ব্যর্থ: ' + (e.message || ''));
+                    exitApp();
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                clearUnsubs();
+                exitApp();
+                setLoading(false);
+            }
+        });
+
+        // ---------- UI helpers ----------
+        function hideAllViews() {
+            [playTabView, meTabView, matchListSubView, walletTabView, transactionsView, addMoneyView, withdrawView,
+             supportView, notificationView, developerView, referView, profileSubView, topPlayersSubView].forEach(el => el && el.classList.add('hidden'));
+            [defaultHeader, walletHeader, transactionsHeader, addMoneyHeader, withdrawHeader, supportHeader, notificationHeader, developerHeader, referHeader].forEach(el => el && el.classList.add('hidden'));
+        }
+        window.hideAllViews = hideAllViews;
+
+        function switchTab(tab) {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            if (tab === 'play') {
+                playTabView.classList.remove('hidden');
+                playNavBtn.classList.add('active');
+                meNavBtn.classList.remove('active');
+            } else {
+                meTabView.classList.remove('hidden');
+                meNavBtn.classList.add('active');
+                playNavBtn.classList.remove('active');
+            }
+        }
+        window.switchTab = switchTab;
+
+        function openWalletScreen() {
+            hideAllViews();
+            walletTabView.classList.remove('hidden');
+            walletHeader.classList.remove('hidden');
+        }
+        window.openWalletScreen = openWalletScreen;
+
+        function closeWalletScreen() {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            meTabView.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+        }
+        window.closeWalletScreen = closeWalletScreen;
+
+        function txnTypeLabel(type) {
+            const map = {
+                deposit: 'ডিপোজিট',
+                withdraw: 'উইথড্র',
+                welcome_bonus: 'ওয়েলকাম বোনাস',
+                referral_bonus: 'রেফার বোনাস',
+                admin_adjust: 'অ্যাডমিন অ্যাডজাস্ট',
+                transfer: 'ব্যালেন্স ট্রান্সফার',
+                match_entry: 'ম্যাচ এন্ট্রি',
+                match_win: 'ম্যাচ জয়',
+                match_prize: 'ম্যাচ প্রাইজ'
+            };
+            return map[type] || type || 'ট্রানজেকশন';
+        }
+
+        function txnIconClass(amount, type) {
+            const a = Number(amount) || 0;
+            if (a > 0) return 'plus';
+            if (a < 0) return 'minus';
+            if (type === 'withdraw') return 'minus';
+            if (type === 'deposit' || type === 'welcome_bonus' || type === 'referral_bonus') return 'plus';
+            return 'neutral';
+        }
+
+        async function openTransactionsScreen() {
+            hideAllViews();
+            transactionsView.classList.remove('hidden');
+            transactionsHeader.classList.remove('hidden');
+            await loadTransactions();
+        }
+        window.openTransactionsScreen = openTransactionsScreen;
+
+        function closeTransactionsScreen() {
+            hideAllViews();
+            walletTabView.classList.remove('hidden');
+            walletHeader.classList.remove('hidden');
+        }
+        window.closeTransactionsScreen = closeTransactionsScreen;
+
+        async function loadTransactions() {
+            const box = document.getElementById('transactionsList');
+            if (!box) return;
+            box.innerHTML = '<div class="txn-empty">লোড হচ্ছে...</div>';
+            if (!appState.uid) {
+                box.innerHTML = '<div class="txn-empty">লগইন করা নেই</div>';
+                return;
+            }
+            try {
+                let rows = [];
+                // try ordered query
+                try {
+                    const q1 = query(
+                        collection(db, 'transactions'),
+                        where('userId', '==', appState.uid),
+                        orderBy('createdAt', 'desc'),
+                        limit(50)
+                    );
+                    const snap = await getDocs(q1);
+                    rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (idxErr) {
+                    console.warn('txn orderBy failed, fallback', idxErr);
+                    const q2 = query(collection(db, 'transactions'), where('userId', '==', appState.uid));
+                    const snap2 = await getDocs(q2);
+                    rows = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+                    rows.sort((a, b) => {
+                        const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+                        const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+                        return tb - ta;
+                    });
+                    rows = rows.slice(0, 50);
+                }
+
+                if (!rows.length) {
+                    box.innerHTML = '<div class="txn-empty">কোনো ট্রানজেকশন নেই</div>';
+                    return;
+                }
+
+                box.innerHTML = rows.map(t => {
+                    const amount = Number(t.amount) || 0;
+                    const cls = txnIconClass(amount, t.type);
+                    const sign = amount > 0 ? '+' : '';
+                    const icon = cls === 'plus' ? 'fa-arrow-down' : (cls === 'minus' ? 'fa-arrow-up' : 'fa-exchange-alt');
+                    const timeStr = formatTime(t.createdAt);
+                    const note = t.note || '';
+                    return `
+                        <div class="txn-item">
+                            <div class="txn-icon ${cls}"><i class="fa-solid ${icon}"></i></div>
+                            <div class="txn-body">
+                                <div class="txn-title">${txnTypeLabel(t.type)}</div>
+                                ${note ? `<div class="txn-note">${String(note).replace(/</g,'&lt;')}</div>` : ''}
+                                <div class="txn-meta">${timeStr} · ${(t.id || '').slice(0, 8)}</div>
+                            </div>
+                            <div class="txn-amount ${cls}">${sign}৳${Math.abs(amount).toLocaleString()}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error(e);
+                box.innerHTML = '<div class="txn-empty" style="color:#f87171;">ট্রানজেকশন লোড হয়নি</div>';
+            }
+        }
+
+        function openAddMoneyScreen() {
+            hideAllViews();
+            addMoneyView.classList.remove('hidden');
+            addMoneyHeader.classList.remove('hidden');
+        }
+        window.openAddMoneyScreen = openAddMoneyScreen;
+
+        function closeAddMoneyScreen() {
+            hideAllViews();
+            walletTabView.classList.remove('hidden');
+            walletHeader.classList.remove('hidden');
+        }
+        window.closeAddMoneyScreen = closeAddMoneyScreen;
+
+        function selectMethod(el) {
+            document.querySelectorAll('#addMoneyView .method-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        window.selectMethod = selectMethod;
+
+        function copyNumber(number) {
+            // prefer live settings numbers if matching method row
+            const text = number;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('নাম্বার কপি হয়েছে: ' + text);
+            }).catch(() => showToast('কপি করা যায়নি, ম্যানুয়ালি কপি করুন'));
+        }
+        window.copyNumber = copyNumber;
+
+        async function verifyPayment() {
+            const trx = document.getElementById('trxIdInput').value.trim();
+            const amount = document.getElementById('amountInput').value.trim();
+            const methodBtn = document.querySelector('#addMoneyView .method-btn.selected img');
+            const method = methodBtn ? (methodBtn.alt || 'bKash') : 'bKash';
+
+            if (!trx || !amount) { alert('ট্রানজেকশন আইডি এবং এমাউন্ট দিন'); return; }
+            if (parseInt(amount) < 10) { alert('মিনিমাম ১০ টাকা Send Money করতে হবে'); return; }
+            if (!appState.uid) return;
+
+            const btn = document.getElementById('verifyBtn');
+            btn.disabled = true;
+            btn.textContent = 'যাচাই করা হচ্ছে...';
+            try {
+                await addDoc(collection(db, 'deposits'), {
+                    userId: appState.uid,
+                    userName: appState.name,
+                    userPhone: appState.phone,
+                    method,
+                    trxId: trx,
+                    amount: Number(amount),
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('trxIdInput').value = '';
+                document.getElementById('amountInput').value = '';
+                alert('ভেরিফিকেশন রিকোয়েস্ট সাবমিট হয়েছে!\nট্রানজেকশন আইডি: ' + trx + '\nএমাউন্ট: ৳' + amount + '\n\nএডমিন অনুমোদনের পর ব্যালেন্স যোগ হবে।');
+                closeAddMoneyScreen();
+            } catch (e) {
+                console.error(e);
+                alert('সাবমিট ব্যর্থ: ' + (e.message || ''));
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'VERIFY';
+            }
+        }
+        window.verifyPayment = verifyPayment;
+
+        function withdrawFunds() { openWithdrawScreen(); }
+        window.withdrawFunds = withdrawFunds;
+
+        function openWithdrawScreen() {
+            hideAllViews();
+            refreshBalances();
+            withdrawView.classList.remove('hidden');
+            withdrawHeader.classList.remove('hidden');
+            document.getElementById('withdrawAccountInput').value = '';
+            document.getElementById('withdrawAmountInput').value = '';
+        }
+        window.openWithdrawScreen = openWithdrawScreen;
+
+        function closeWithdrawScreen() {
+            hideAllViews();
+            walletTabView.classList.remove('hidden');
+            walletHeader.classList.remove('hidden');
+        }
+        window.closeWithdrawScreen = closeWithdrawScreen;
+
+        function selectWithdrawMethod(el, method) {
+            document.querySelectorAll('#withdrawView .method-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedWithdrawMethod = method;
+        }
+        window.selectWithdrawMethod = selectWithdrawMethod;
+
+        async function submitWithdraw() {
+            const account = document.getElementById('withdrawAccountInput').value.trim();
+            const amount = document.getElementById('withdrawAmountInput').value.trim();
+            const amt = parseFloat(amount);
+            if (!account) { alert('আপনার অ্যাকাউন্ট নাম্বার দিন'); return; }
+            if (!amount || isNaN(amt) || amt <= 0) { alert('সঠিক এমাউন্ট দিন'); return; }
+            if (amt < 50) { alert('মিনিমাম উইথড্র ৫০ টাকা'); return; }
+            if (amt > appState.winningBalance) {
+                alert('আপনার উইনিং ব্যালেন্স পর্যাপ্ত নয়।\nউপলব্ধ: ৳' + appState.winningBalance.toFixed(2));
+                return;
+            }
+            if (!appState.uid) return;
+
+            const btn = document.getElementById('withdrawSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = 'প্রসেস হচ্ছে...';
+            try {
+                // deduct winning balance immediately, admin approves payout
+                const uref = doc(db, 'users', appState.uid);
+                await updateDoc(uref, { winningBalance: increment(-amt) });
+                await addDoc(collection(db, 'withdraws'), {
+                    userId: appState.uid,
+                    userName: appState.name,
+                    userPhone: appState.phone,
+                    method: selectedWithdrawMethod,
+                    account,
+                    amount: amt,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                await addDoc(collection(db, 'transactions'), {
+                    userId: appState.uid,
+                    type: 'withdraw_request',
+                    amount: -amt,
+                    note: selectedWithdrawMethod + ' → ' + account,
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('withdrawAccountInput').value = '';
+                document.getElementById('withdrawAmountInput').value = '';
+                alert('উইথড্র রিকোয়েস্ট সাবমিট হয়েছে!\nমেথড: ' + selectedWithdrawMethod + '\nঅ্যাকাউন্ট: ' + account + '\nএমাউন্ট: ৳' + amt.toFixed(2) + '\n\nএডমিন অনুমোদনের পর টাকা পাঠানো হবে।');
+                closeWithdrawScreen();
+            } catch (e) {
+                console.error(e);
+                alert('সাবমিট ব্যর্থ: ' + (e.message || ''));
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'WITHDRAW';
+            }
+        }
+        window.submitWithdraw = submitWithdraw;
+
+        async function transferFunds() {
+            if (appState.winningBalance <= 0) {
+                showToast('ট্রান্সফার করার মতো কোনো উইনিং ব্যালেন্স নেই');
+                return;
+            }
+            if (!appState.uid) return;
+            const amt = appState.winningBalance;
+            try {
+                await updateDoc(doc(db, 'users', appState.uid), {
+                    gamingBalance: increment(amt),
+                    winningBalance: 0
+                });
+                await addDoc(collection(db, 'transactions'), {
+                    userId: appState.uid,
+                    type: 'transfer',
+                    amount: amt,
+                    note: 'Winning → Gaming',
+                    createdAt: serverTimestamp()
+                });
+                showToast('উইনিং ব্যালেন্স গেমিং ব্যালেন্সে ট্রান্সফার হয়েছে');
+            } catch (e) {
+                alert('ট্রান্সফার ব্যর্থ: ' + (e.message || ''));
+            }
+        }
+        window.transferFunds = transferFunds;
+
+        async function confirmLogout() {
+            if (!confirm('আপনি কি লগআউট করতে চান?')) return;
+            try {
+                await signOut(auth);
+                showToast('লগআউট হয়েছে');
+            } catch (e) {
+                showToast('লগআউট ব্যর্থ');
+            }
+        }
+        window.confirmLogout = confirmLogout;
+
+        function updateReferScreenUI() {
+            const code = appState.referralCode || makeReferralCode(appState.phone);
+            const codeEl = document.getElementById('referCodeDisplay');
+            const countEl = document.getElementById('referCountDisplay');
+            const earnEl = document.getElementById('referEarnDisplay');
+            if (codeEl) codeEl.textContent = code;
+            if (countEl) countEl.textContent = String(appState.referralCount || 0);
+            if (earnEl) earnEl.textContent = '৳' + (appState.referralEarnings || 0);
+        }
+
+        function showReferAndEarn() {
+            hideAllViews();
+            updateReferScreenUI();
+            referHeader.classList.remove('hidden');
+            referView.classList.remove('hidden');
+            playNavBtn.classList.remove('active');
+            meNavBtn.classList.add('active');
+        }
+        window.showReferAndEarn = showReferAndEarn;
+
+        function closeReferScreen() {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            meTabView.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+        }
+        window.closeReferScreen = closeReferScreen;
+
+        function copyReferCode() {
+            const code = appState.referralCode || makeReferralCode(appState.phone);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => showToast('কোড কপি হয়েছে: ' + code)).catch(() => {
+                    prompt('কপি করুন:', code);
+                });
+            } else {
+                prompt('কপি করুন:', code);
+            }
+        }
+        window.copyReferCode = copyReferCode;
+
+        function shareReferCode() {
+            const code = appState.referralCode || makeReferralCode(appState.phone);
+            const text = encodeURIComponent(
+                'Ludo King Star-এ জয়েন করুন!\n\nআমার রেফার কোড: ' + code + '\nরেজিস্ট্রেশনে কোড দিলে বোনাস পাবেন ৳5–৳30!\n\nঅ্যাপ থেকে রেজিস্টার করুন।'
+            );
+            window.open('https://wa.me/?text=' + text, '_blank');
+        }
+        window.shareReferCode = shareReferCode;
+
+        function openSupportScreen() {
+            hideAllViews();
+            supportView.classList.remove('hidden');
+            supportHeader.classList.remove('hidden');
+        }
+        window.openSupportScreen = openSupportScreen;
+
+        function closeSupportScreen() {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            if (meNavBtn.classList.contains('active')) meTabView.classList.remove('hidden');
+            else { playTabView.classList.remove('hidden'); playNavBtn.classList.add('active'); meNavBtn.classList.remove('active'); }
+        }
+        window.closeSupportScreen = closeSupportScreen;
+
+        function showSupportFAQ() {
+            alert('সাধারণ প্রশ্ন (FAQ)\n\n১. কীভাবে টাকা অ্যাড করব?\nWallet → Add Money → মেথড সিলেক্ট করে Send Money করুন, তারপর TrxID দিয়ে Verify করুন।\n\n২. উইথড্র কতক্ষণে হয়?\nএডমিন অনুমোদনের পর সাধারণত ১–২৪ ঘণ্টার মধ্যে।\n\n৩. ম্যাচ জয়েন করার পর রুম আইডি কখন পাব?\nদুইজন জয়েন হলেই ROOM ID বাটনে দেখা যাবে।');
+        }
+        window.showSupportFAQ = showSupportFAQ;
+
+        async function sendSupportMessage() {
+            const msg = document.getElementById('supportMessageInput').value.trim();
+            if (!msg) { showToast('মেসেজ লিখুন'); return; }
+            try {
+                await addDoc(collection(db, 'supportMessages'), {
+                    userId: appState.uid,
+                    userName: appState.name,
+                    userPhone: appState.phone,
+                    message: msg,
+                    status: 'open',
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('supportMessageInput').value = '';
+                showToast('মেসেজ পাঠানো হয়েছে! এডমিন শীঘ্রই জবাব দেবেন');
+            } catch (e) {
+                showToast('পাঠানো যায়নি');
+            }
+        }
+        window.sendSupportMessage = sendSupportMessage;
+
+        function openNotificationScreen() {
+            hideAllViews();
+            notificationView.classList.remove('hidden');
+            notificationHeader.classList.remove('hidden');
+            renderNotifications();
+            // mark read locally; full write optional
+            notifications.forEach(n => n.unread = false);
+            updateNotifBadge();
+            // mark in firestore
+            notifications.forEach(async (n) => {
+                try { await updateDoc(doc(db, 'notifications', n.id), { read: true }); } catch(_){}
+            });
+        }
+        window.openNotificationScreen = openNotificationScreen;
+
+        function closeNotificationScreen() {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            if (meNavBtn.classList.contains('active')) meTabView.classList.remove('hidden');
+            else { playTabView.classList.remove('hidden'); playNavBtn.classList.add('active'); meNavBtn.classList.remove('active'); }
+        }
+        window.closeNotificationScreen = closeNotificationScreen;
+
+        function updateNotifBadge() {
+            const unread = notifications.filter(n => n.unread).length;
+            const badge = document.getElementById('notifBadge');
+            if (!badge) return;
+            if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
+            else badge.style.display = 'none';
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notifListContainer');
+            if (!notifications.length) {
+                container.innerHTML = `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><div>কোনো নোটিফিকেশন নেই</div></div>`;
+                return;
+            }
+            const iconMap = { money: 'fa-wallet', match: 'fa-gamepad', system: 'fa-gear', promo: 'fa-gift' };
+            container.innerHTML = notifications.map(n => `
+                <div class="notif-item${n.unread ? ' unread' : ''}">
+                    <div class="notif-icon-box ${n.type}"><i class="fa-solid ${iconMap[n.type] || 'fa-bell'}"></i></div>
+                    <div class="notif-content">
+                        <div class="notif-title">${n.title}</div>
+                        <div class="notif-body">${n.body}</div>
+                        <div class="notif-time">${n.time}</div>
+                    </div>
+                </div>
+            `).join('') + `<button class="notif-clear-btn" onclick="clearAllNotifications()">সব মুছে ফেলুন</button>`;
+        }
+
+        async function clearAllNotifications() {
+            for (const n of notifications) {
+                try { await updateDoc(doc(db, 'notifications', n.id), { read: true, cleared: true }); } catch(_){}
+            }
+            notifications = [];
+            updateNotifBadge();
+            renderNotifications();
+            showToast('সব নোটিফিকেশন মুছে ফেলা হয়েছে');
+        }
+        window.clearAllNotifications = clearAllNotifications;
+
+        function openDeveloperScreen() {
+            hideAllViews();
+            developerView.classList.remove('hidden');
+            developerHeader.classList.remove('hidden');
+        }
+        window.openDeveloperScreen = openDeveloperScreen;
+
+        function closeDeveloperScreen() {
+            hideAllViews();
+            defaultHeader.classList.remove('hidden');
+            meTabView.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+        }
+        window.closeDeveloperScreen = closeDeveloperScreen;
+
+        function openMatchListScreen() {
+            hideAllViews();
+            matchListSubView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+            renderMatchList();
+        }
+        window.openMatchListScreen = openMatchListScreen;
+
+        function closeMatchListScreen() {
+            matchListSubView.classList.add('hidden');
+            playTabView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+        }
+        window.closeMatchListScreen = closeMatchListScreen;
+
+        function showHowToPlay() {
+            alert('কিভাবে খেলবেনঃ\n\n1) JOIN বাটনে ক্লিক করুন\n2) এন্ট্রি ফি কেটে নেওয়া হবে\n3) দুইজন জয়েন হলে রুম আইডি দেওয়া হবে\n4) Ludo King অ্যাপে রুম আইডি দিয়ে খেলুন\n5) ম্যাচ শেষে স্ক্রিনশট আপলোড করুন');
+        }
+        window.showHowToPlay = showHowToPlay;
+
+        function showRoomId(matchId) {
+            const m = matchesCache.find(x => x.id === matchId);
+            if (!m) { showToast('ম্যাচ পাওয়া যায়নি'); return; }
+            const filled = Number(m.filled) || 0;
+            const slots = Number(m.slots) || 2;
+            if (filled < slots || !m.roomId) {
+                showToast('আরো প্লেয়ার জয়েন হলে রুম আইডি দেওয়া হবে');
+            } else {
+                alert('রুম আইডিঃ ' + m.roomId + '\nপাসওয়ার্ডঃ ' + (m.roomPass || '0000'));
+            }
+        }
+        window.showRoomId = showRoomId;
+
+        async function joinMatch(matchId) {
+            const m = matchesCache.find(x => x.id === matchId);
+            if (!m) { showToast('ম্যাচ পাওয়া যায়নি'); return; }
+            if (appState.matchJoinedIds[matchId]) {
+                showToast('আপনি ইতিমধ্যে এই ম্যাচে জয়েন করেছেন');
+                return;
+            }
+            const filled = Number(m.filled) || 0;
+            const slots = Number(m.slots) || 2;
+            const entryFee = Number(m.entry) || 0;
+            if (filled >= slots || m.status === 'full') {
+                showToast('এই ম্যাচের সব স্লট পূর্ণ হয়ে গেছে');
+                return;
+            }
+            if (appState.gamingBalance < entryFee) {
+                alert('আপনার পর্যাপ্ত ব্যালেন্স নেই।\nপ্রয়োজনঃ ৳' + entryFee.toFixed(2) + '\nআপনার ব্যালেন্সঃ ৳' + appState.gamingBalance.toFixed(2));
+                openAddMoneyScreen();
+                return;
+            }
+            if (!confirm('এই ম্যাচে জয়েন করতে ৳' + entryFee.toFixed(2) + ' কেটে নেওয়া হবে। আপনি কি নিশ্চিত?')) return;
+
+            setLoading(true, 'জয়েন হচ্ছে...');
+            try {
+                await updateDoc(doc(db, 'users', appState.uid), {
+                    gamingBalance: increment(-entryFee),
+                    matchesPlayed: increment(1)
+                });
+                const newFilled = filled + 1;
+                const updates = {
+                    filled: newFilled
+                };
+                if (newFilled >= slots) updates.status = 'full';
+                await updateDoc(doc(db, 'matches', matchId), updates);
+                await addDoc(collection(db, 'matchPlayers'), {
+                    matchId,
+                    userId: appState.uid,
+                    userName: appState.name,
+                    userPhone: appState.phone,
+                    entryFee,
+                    createdAt: serverTimestamp()
+                });
+                await addDoc(collection(db, 'transactions'), {
+                    userId: appState.uid,
+                    type: 'match_entry',
+                    amount: -entryFee,
+                    note: (m.title || 'Match') + ' join',
+                    createdAt: serverTimestamp()
+                });
+                appState.matchJoinedIds[matchId] = true;
+                if (newFilled >= slots) showToast('ম্যাচ জয়েন সম্পন্ন! রুম আইডি চেক করুন');
+                else showToast('ম্যাচে জয়েন হয়েছে! আরেকজনের অপেক্ষা করা হচ্ছে');
+            } catch (e) {
+                console.error(e);
+                alert('জয়েন ব্যর্থ: ' + (e.message || ''));
+            } finally {
+                setLoading(false);
+            }
+        }
+        window.joinMatch = joinMatch;
+
+        function openProfileScreen() {
+            hideAllViews();
+            profileSubView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+            refreshBalances();
+        }
+        window.openProfileScreen = openProfileScreen;
+
+        function closeProfileScreen() {
+            hideAllViews();
+            meTabView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+        }
+        window.closeProfileScreen = closeProfileScreen;
+
+        async function saveProfile() {
+            const name = document.getElementById('profileNameInput').value.trim();
+            const email = document.getElementById('profileEmailInput').value.trim();
+            if (!name) { alert('নাম খালি রাখা যাবে না'); return; }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('সঠিক ইমেইল দিন'); return; }
+            try {
+                await updateDoc(doc(db, 'users', appState.uid), { name, email: email || '' });
+                if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name });
+                showToast('প্রোফাইল সেভ হয়েছে');
+                closeProfileScreen();
+            } catch (e) {
+                alert('সেভ ব্যর্থ: ' + (e.message || ''));
+            }
+        }
+        window.saveProfile = saveProfile;
+
+        let leaderboardCache = [];
+        let currentLeaderboardPeriod = 'alltime';
+
+        async function openTopPlayersScreen() {
+            hideAllViews();
+            topPlayersSubView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+            // reset tabs to All Time (most reliable ranking)
+            document.querySelectorAll('.leaderboard-tab').forEach(t => t.classList.remove('active'));
+            const tabs = document.querySelectorAll('.leaderboard-tab');
+            if (tabs[2]) tabs[2].classList.add('active');
+            else if (tabs[0]) tabs[0].classList.add('active');
+            await renderLeaderboard('alltime');
+        }
+        window.openTopPlayersScreen = openTopPlayersScreen;
+
+        function closeTopPlayersScreen() {
+            hideAllViews();
+            meTabView.classList.remove('hidden');
+            defaultHeader.classList.remove('hidden');
+            meNavBtn.classList.add('active');
+            playNavBtn.classList.remove('active');
+        }
+        window.closeTopPlayersScreen = closeTopPlayersScreen;
+
+        function switchLeaderboard(el, period) {
+            document.querySelectorAll('.leaderboard-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderLeaderboard(period);
+        }
+        window.switchLeaderboard = switchLeaderboard;
+
+        async function fetchLeaderboardUsers() {
+            // 1) try ordered query
+            try {
+                const q = query(collection(db, 'users'), orderBy('totalWinnings', 'desc'), limit(50));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                }
+            } catch (e) {
+                console.warn('leaderboard orderBy failed, fallback', e);
+            }
+            // 2) fallback: all users, sort client-side (no index needed)
+            try {
+                const snap = await getDocs(collection(db, 'users'));
+                return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            } catch (e2) {
+                console.error('leaderboard fetch failed', e2);
+                return [];
+            }
+        }
+
+        function scoreForPeriod(u, period) {
+            const total = Number(u.totalWinnings) || 0;
+            const matches = Number(u.matchesPlayed) || 0;
+            const gaming = Number(u.gamingBalance) || 0;
+            const winning = Number(u.winningBalance) || 0;
+            // period-specific score (without separate period fields we approximate)
+            if (period === 'weekly') return total * 0.3 + matches * 5 + winning * 0.1;
+            if (period === 'monthly') return total * 0.6 + matches * 3 + winning * 0.2;
+            return total; // alltime
+        }
+
+        async function renderLeaderboard(period) {
+            currentLeaderboardPeriod = period || 'alltime';
+            const list = document.getElementById('leaderboardList');
+            if (!list) return;
+            list.innerHTML = '<div style="text-align:center;padding:24px;color:#8d99ae;">লোড হচ্ছে...</div>';
+
+            try {
+                if (!leaderboardCache.length) {
+                    leaderboardCache = await fetchLeaderboardUsers();
+                } else {
+                    // refresh in background occasionally
+                    fetchLeaderboardUsers().then(rows => { if (rows.length) leaderboardCache = rows; }).catch(() => {});
+                }
+
+                let rows = (leaderboardCache || [])
+                    .filter(u => !u.isAdmin && (u.name || u.phone))
+                    .map(u => ({
+                        id: u.id,
+                        name: u.name || 'Player',
+                        matches: Number(u.matchesPlayed) || 0,
+                        winnings: Number(u.totalWinnings) || 0,
+                        score: scoreForPeriod(u, currentLeaderboardPeriod),
+                        phone: u.phone || ''
+                    }));
+
+                rows.sort((a, b) => {
+                    if (b.score !== a.score) return b.score - a.score;
+                    if (b.winnings !== a.winnings) return b.winnings - a.winnings;
+                    return b.matches - a.matches;
+                });
+
+                rows = rows.slice(0, 20);
+
+                if (!rows.length) {
+                    list.innerHTML = '<div style="text-align:center;padding:28px;color:#8d99ae;">এখনো কোনো প্লেয়ার নেই</div>';
+                    return;
+                }
+
+                const rankClasses = ['gold', 'silver', 'bronze'];
+                const avatarUrl = 'https://i.postimg.cc/W3Rxndqm/male-face-avatar-icon-set-flat-design-social-media-profiles-1281173-3806.jpg';
+                list.innerHTML = rows.map((p, i) => {
+                    const rankClass = rankClasses[i] || '';
+                    const isTop = i < 3;
+                    const isMe = p.id === appState.uid;
+                    const showAmt = currentLeaderboardPeriod === 'alltime' ? p.winnings : Math.round(p.score);
+                    return `
+                    <div class="leaderboard-row${isTop ? ' top-rank' : ''}${isMe ? ' me-row' : ''}">
+                        <div class="rank-badge ${rankClass}">${i + 1}</div>
+                        <div class="leaderboard-avatar"><img src="${avatarUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${escapeHtml(p.name)}${isMe ? ' (আপনি)' : ''}</div>
+                            <div class="leaderboard-sub">${p.matches} matches · ৳${p.winnings.toLocaleString()} win</div>
+                        </div>
+                        <div class="leaderboard-winnings">৳${Number(showAmt).toLocaleString()}</div>
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                console.error(e);
+                list.innerHTML = '<div style="text-align:center;padding:28px;color:#f87171;">লিডারবোর্ড লোড হয়নি। আবার চেষ্টা করুন।</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+    </script>
+
+</body>
+</html>
