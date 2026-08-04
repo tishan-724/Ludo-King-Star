@@ -121,10 +121,7 @@ async function start() {
     }
 
     const registration = await navigator.serviceWorker.register(
-      "/Ludo-King-Star/firebase-messaging-sw.js",
-      {
-        scope: "/Ludo-King-Star/"
-      }
+      "/firebase-messaging-sw.js"
     );
 
     const token = await getToken(messaging, {
