@@ -111,7 +111,9 @@ copyBtn.onclick = () => {
 
 async function start() {
   try {
-    await signInAnonymously(auth);
+    if (!auth.currentUser) {
+      await signInAnonymously(auth);
+    }
 
     const permission = await Notification.requestPermission();
 
@@ -129,12 +131,21 @@ async function start() {
       serviceWorkerRegistration: registration
     });
 
+    if (!token) {
+      status.innerText = "❌ Token পাওয়া যায়নি";
+      return;
+    }
+
     tokenBox.value = token;
     status.innerText = "✅ Connected";
 
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    await setDoc(doc(db, "users", token), {
+      uid: auth.currentUser.uid,
       token: token,
-      createdAt: Date.now()
+      updatedAt: Date.now(),
+      userAgent: navigator.userAgent
+    }, {
+      merge: true
     });
 
   } catch (e) {
