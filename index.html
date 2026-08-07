@@ -111,24 +111,27 @@ copyBtn.onclick = () => {
 
 async function start() {
   try {
+    status.innerText = "Starting...";
+    status.innerText = "Signing in...";
     if (!auth.currentUser) {
       await signInAnonymously(auth);
     }
 
+    status.innerText = "Requesting permission...";
     const permission = await Notification.requestPermission();
 
     if (permission !== "granted") {
-      status.innerText = "Notification Permission Denied";
+      status.innerText = "❌ Notification Permission Denied";
       return;
     }
 
+    status.innerText = "Registering Service Worker...";
     const registration = await navigator.serviceWorker.register(
       "./firebase-messaging-sw.js",
-      {
-        scope: "./"
-      }
+      { scope: "./" }
     );
 
+    status.innerText = "Getting FCM Token...";
     const token = await getToken(messaging, {
       vapidKey: VAPID_KEY,
       serviceWorkerRegistration: registration
@@ -139,26 +142,23 @@ async function start() {
       return;
     }
 
+    status.innerText = "Saving to Firestore...";
+
     tokenBox.value = token;
-    status.innerText = "✅ Connected";
 
     await setDoc(doc(db, "users", token), {
       uid: auth.currentUser.uid,
-      token: token,
+      token,
       updatedAt: Date.now(),
       userAgent: navigator.userAgent
-    }, {
-      merge: true
-    });
+    }, { merge: true });
+
+    status.innerText = "✅ Connected";
 
   } catch (e) {
     console.error(e);
-
-    status.innerText = "❌ " + e.code;
-
-    tokenBox.value =
-      "Code: " + (e.code || "Unknown") +
-      "\n\nMessage:\n" + (e.message || e);
+    status.innerText = "❌ " + (e.code || "Error");
+    alert(e.message);
   }
 }
 
